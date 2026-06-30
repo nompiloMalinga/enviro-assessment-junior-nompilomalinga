@@ -1,0 +1,44 @@
+<mat-card>
+  <mat-card-title>Investor Management Dashboard</mat-card-title>
+
+  <div class="button-container">
+    <button mat-raised-button color="accent"
+      (click)="activeView = 'portfolio'">
+      Portfolio
+    </button>
+
+    <button mat-raised-button color="primary"
+      (click)="activeView = 'withdrawal'">
+      Withdrawal
+    </button>
+
+    <button mat-raised-button color="warn"
+      (click)="activeView = 'history'">
+      History
+    </button>
+
+    <button mat-raised-button color="warn"
+      (click)="activeView = 'csv-report'">
+      Csv Report
+    </button>
+  </div>
+</mat-card>
+
+<!-- VIEW SWITCHING -->
+@if (activeView === 'portfolio') {
+  <app-portfolio>
+    (changeView)="activeView = $event">
+  </app-portfolio>
+}
+
+@if (activeView === 'withdrawal') {
+  <app-withdrawal-form></app-withdrawal-form>
+}
+
+@if (activeView === 'history') {
+  <app-withdrawal-history></app-withdrawal-history>
+}
+
+@if (activeView === 'csv-report') {
+  <app-csv-report></app-csv-report>
+}

@@ -1,0 +1,35 @@
+<mat-card>
+  <mat-card-title>Download Withdrawal Report</mat-card-title>
+
+  <mat-card-content>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Investor</mat-label>
+      <mat-select [(ngModel)]="selectedInvestorId" name="investorId">
+        @for (investor of investors; track investor.id) {
+          <mat-option [value]="investor.id">
+            {{ investor.name }} {{ investor.surname }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (errorMessage) {
+      <div class="error">{{ errorMessage }}</div>
+    }
+
+    @if (successMessage) {
+      <div class="success">{{ successMessage }}</div>
+    }
+
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!selectedInvestorId"
+      (click)="downloadCsv()">
+      <mat-icon>download</mat-icon>
+      Download CSV
+    </button>
+
+  </mat-card-content>
+</mat-card>

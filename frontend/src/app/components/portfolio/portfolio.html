@@ -1,0 +1,247 @@
+<div class="container">
+
+    <mat-card>
+        <mat-card-title>Investor Management</mat-card-title>
+
+        <div class="button-container">
+            <button mat-raised-button color="primary" (click)="toggleLoadInvestor()">
+
+                Load Investor
+            </button>
+
+            <button mat-raised-button color="accent" (click)="togglePortfolio()">
+
+                View Investor Portfolio
+            </button>
+            <button mat-raised-button color="accent" (click)="toggleAllInvestors()">
+
+                View All Investors
+            </button>
+
+        </div>
+    </mat-card>
+
+    <!-- LOAD INVESTOR -->
+    <div class="content-section">
+        @if (showLoadInvestor) {
+
+        <mat-card class="mt-3">
+
+            <mat-card-title>Load Investor</mat-card-title>
+
+            <form [formGroup]="investorForm" (ngSubmit)="saveInvestor()">
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name">
+                    @if (investorForm.get('name')?.hasError('required')) {
+                    <mat-error>Name is required</mat-error>
+                    }
+
+
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Surname</mat-label>
+                    <input matInput formControlName="surname">
+                    @if (investorForm.get('surname')?.hasError('required')) {
+                    <mat-error>Surname is required</mat-error>
+                    }
+
+
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Age</mat-label>
+                    <input matInput type="number" formControlName="age">
+                    @if (investorForm.get('age')?.hasError('required')) {
+                    <mat-error>Age is required</mat-error>
+                    }
+
+                </mat-form-field>
+                <h3>Products</h3>
+
+                <table class="mat-elevation-z2" formArrayName="products">
+
+                    <thead>
+                        <tr>
+                            <th>Product Type</th>
+                            <th>Balance</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @for (product of products.controls; track $index) {
+
+                        <tr [formGroupName]="$index">
+
+                            <td>
+                                <input matInput placeholder="Product Type" formControlName="productType">
+                            </td>
+
+                            <td>
+                                <input matInput type="number" placeholder="Balance" formControlName="balance">
+                            </td>
+
+                            <td>
+                                <button mat-icon-button color="warn" type="button" (click)="removeProduct($index)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+
+                        </tr>
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+                <br>
+
+                <!-- ADD PRODUCT BUTTON -->
+                <button mat-raised-button color="primary" type="button" (click)="addProduct()">
+
+                    <mat-icon>add</mat-icon>
+                    Add Product
+
+                </button>
+
+                <br><br>
+
+                <button mat-raised-button color="primary" type="submit">
+
+                    Submit
+
+                </button>
+
+            </form>
+
+        </mat-card>
+
+        }
+
+        <!-- VIEW PORTFOLIO -->
+
+        @if (showPortfolio) {
+        <mat-card class="mt-3">
+            <mat-card-title>Investor Portfolio</mat-card-title>
+
+            <div class="search">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Investor</mat-label>
+                    <mat-select [(ngModel)]="investorId" name="investorId">
+                        @for (investor of investors; track investor.id) {
+                        <mat-option [value]="investor.id">
+                            {{ investor.name }} {{ investor.surname }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" (click)="loadPortfolio()">
+                    Search
+                </button>
+            </div>
+
+            @if (investor) {
+
+            <div>
+                <h2>{{ investor.name }} {{ investor.surname }}</h2>
+                <p>
+                    <strong>Age:</strong>
+                    {{ investor.age }}
+                </p>
+                <table mat-table [dataSource]="investor.products" class="mat-elevation-z8">
+                    <!-- Product ID -->
+
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>
+                            ID
+                        </th>
+                        <td mat-cell *matCellDef="let p">
+                            {{ p.id }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Product Type -->
+
+                    <ng-container matColumnDef="productType">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Product
+                        </th>
+                        <td mat-cell *matCellDef="let p">
+                            {{ p.productType }}
+                        </td>
+                    </ng-container>
+                    <!-- Balance -->
+                    <ng-container matColumnDef="balance">
+                        <th mat-header-cell *matHeaderCellDef>
+                            Balance
+                        </th>
+                        <td mat-cell *matCellDef="let p">
+                            {{ p.balance | currency:'ZAR' }}
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns">
+                    </tr>
+                </table>
+            </div>
+            }
+        </mat-card>
+        }
+        <!-- VIEW all investors -->
+        @if(showAllInvestors){
+
+        <mat-card>
+            <mat-card-title>All Investors</mat-card-title>
+
+            <mat-card-content>
+                <table mat-table [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef>ID</th>
+                        <td mat-cell *matCellDef="let investor">{{ investor.id }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let investor">{{ investor.name }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="surname">
+                        <th mat-header-cell *matHeaderCellDef>Surname</th>
+                        <td mat-cell *matCellDef="let investor">{{ investor.surname }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="age">
+                        <th mat-header-cell *matHeaderCellDef>Age</th>
+                        <td mat-cell *matCellDef="let investor">{{ investor.age }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="products">
+                        <th mat-header-cell *matHeaderCellDef>Products</th>
+                        <td mat-cell *matCellDef="let investor">
+                            <span *ngFor="let product of investor.products">
+                                {{ product.productType }} (R{{ product.balance }})
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnsInvestors"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnsInvestors"></tr>
+                </table>
+
+                <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
+
+            </mat-card-content>
+        </mat-card>
+
+        }
+    </div>
+</div>
