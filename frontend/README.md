@@ -37,9 +37,6 @@ An Angular web application for Enviro365 Investments that allows investors to ma
 4. Run `ng serve`
 5. Navigate to `http://localhost:4200`
 
-## Backend
-Built with Spring Boot — [View Backend Repository](https://github.com/nompiloMalinga/-enviro365/tree/main)
-
 ## Screen shots
 
 ### Dashboard
