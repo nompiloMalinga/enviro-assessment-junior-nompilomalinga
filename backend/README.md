@@ -34,9 +34,32 @@ A Spring Boot REST API for Enviro365 Investments that manages investor portfolio
 - 
 ## API Endpoints
 - `POST /api/investors`
+Example request body:
+```json
+{
+  "name": "Nompilo",
+  "surname": "Malinga",
+  "age": 30,
+  "products": [
+    {
+      "productType": "SAVINGS",
+      "balance": 50000.0
+    }
+  ]
+}
+```
+
 - `GET /api/investors/{id}`
 - `GET /api/investors/all`
 - `POST /api/withdrawals`
+Example request body:
+```json
+{
+  "investorId": 1,
+  "productId": 1,
+  "amount": 5000.0
+}
+
 - `GET /api/withdrawals/history`
 - `GET /api/withdrawals/{investorId}/export`
 
